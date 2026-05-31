@@ -295,6 +295,7 @@ body{background:var(--ed);color:var(--text);
   <div class="logo">⬛ MC ADDON</div>
   <div class="proj-badge">📁 <b id="hdr-ns">myaddon</b></div>
   <div class="tb-sp"></div>
+  <button class="tb-btn" onclick="showHub()" title="เปลี่ยนโปรเจกต์">📁 Projects</button>
   <button class="tb-btn" onclick="resetAll()">↺ Reset</button>
   <button class="tb-pri" id="hdr-dl" onclick="downloadAddon()">↓ Download</button>
 </div>
@@ -334,9 +335,10 @@ body{background:var(--ed);color:var(--text);
 
 <script>
 /* ────────── HELPERS ────────── */
-const $ = s => document.querySelector(s);
-const h = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-const j = v => JSON.stringify(v, null, 2);
+const $  = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const h  = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const j  = v => JSON.stringify(v, null, 2);
 const uid = () => crypto.randomUUID();
 const isMob = () => window.innerWidth <= 768;
 
@@ -1105,8 +1107,10 @@ function resetAll() {
   if (!confirm('รีเซ็ตโปรเจกต์ทั้งหมด?')) return;
   S = makeState(); iCtr = 0;
   genAllUUIDs();
+  $('#hdr-ns').textContent = S.proj.ns || 'myaddon';
   renderAll();
   applyPanel();
+  saveProjectToDir();
 }
 
 /* ────────── RESIZE HANDLE ────────── */
@@ -1127,88 +1131,257 @@ document.addEventListener('mouseup', () => {
 });
 
 
-/* --- Added Features --- */
-function saveProject(){
-  localStorage.setItem('mc_addon_builder_project', JSON.stringify(S));
-}
-function loadProject(){
-  try{
-    const d = localStorage.getItem('mc_addon_builder_project');
-    if(d){
-      S = Object.assign(makeState(), JSON.parse(d));
+/* ─── FILE SYSTEM ACCESS API ─── */
+let projectDirHandle = null;
+const FS_SUPPORTED = ('showDirectoryPicker' in window);
+
+async function saveProjectToDir() {
+  if (!projectDirHandle) { _lsSave(); return; }
+  try {
+    // Save state (without tex dataURLs — stored as separate PNG files)
+    const saveData = JSON.stringify({...S, tex:{}}, null, 2);
+    const fh = await projectDirHandle.getFileHandle('project.json', {create:true});
+    const w = await fh.createWritable();
+    await w.write(saveData); await w.close();
+
+    // Save each texture as a PNG file inside the project folder
+    for (const [key, dataUrl] of Object.entries(S.tex)) {
+      if (!dataUrl || !dataUrl.startsWith('data:')) continue;
+      const base64 = dataUrl.split(',')[1];
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      const blob = new Blob([bytes], {type:'image/png'});
+      const tfh = await projectDirHandle.getFileHandle('tex_'+key+'.png', {create:true});
+      const tw = await tfh.createWritable();
+      await tw.write(blob); await tw.close();
     }
-  }catch(e){}
+    _saveRecentMeta();
+    showSaveBadge('💾 บันทึกลงโฟลเดอร์แล้ว');
+  } catch(e) {
+    console.error('Dir save error:', e);
+    _lsSave();
+  }
 }
-setInterval(saveProject, 2000);
 
-function showNotification(msg){
-  alert(msg);
+async function loadProjectFromDir(dir) {
+  projectDirHandle = dir;
+  try {
+    const fh = await dir.getFileHandle('project.json');
+    const file = await fh.getFile();
+    S = Object.assign(makeState(), JSON.parse(await file.text()));
+    S.tex = {};
+    // Load textures — no re-upload needed!
+    for await (const [name, handle] of dir.entries()) {
+      if (name.startsWith('tex_') && name.endsWith('.png')) {
+        const f = await handle.getFile();
+        const dataUrl = await new Promise((res, rej) => {
+          const r = new FileReader();
+          r.onload = e => res(e.target.result);
+          r.onerror = rej;
+          r.readAsDataURL(f);
+        });
+        S.tex[name.replace(/^tex_/,'').replace(/\.png$/,'')] = dataUrl;
+      }
+    }
+    return true;
+  } catch(e) {
+    console.error('Load from dir error:', e);
+    return false;
+  }
 }
 
+function _lsSave() {
+  try { localStorage.setItem('mc_addon_builder_project', JSON.stringify(S)); } catch(e){}
+}
+function _lsLoad() {
+  try {
+    const d = localStorage.getItem('mc_addon_builder_project');
+    if (d) S = Object.assign(makeState(), JSON.parse(d));
+  } catch(e){}
+}
+function _saveRecentMeta() {
+  if (!projectDirHandle) return;
+  const key = 'mcab_recent_v2';
+  const list = JSON.parse(localStorage.getItem(key)||'[]');
+  const meta = {name: projectDirHandle.name, date: Date.now()};
+  const idx = list.findIndex(r => r.name === meta.name);
+  if (idx >= 0) list.splice(idx, 1);
+  list.unshift(meta);
+  localStorage.setItem(key, JSON.stringify(list.slice(0, 8)));
+}
 
+/* ─── SAVE BADGE ─── */
+function showSaveBadge(msg) {
+  let badge = document.getElementById('saveBadge');
+  if (!badge) {
+    badge = document.createElement('div');
+    badge.id = 'saveBadge';
+    badge.style.cssText = 'position:fixed;bottom:30px;right:16px;background:#3d8b5e;color:#fff;font-size:11px;font-weight:600;padding:5px 12px;border-radius:5px;z-index:9999;opacity:0;transition:opacity .3s';
+    document.body.appendChild(badge);
+  }
+  badge.textContent = msg;
+  badge.style.opacity = '1';
+  clearTimeout(badge._t);
+  badge._t = setTimeout(() => badge.style.opacity='0', 2000);
+}
+
+/* ─── AUTO SAVE ─── */
+setInterval(async () => { await saveProjectToDir(); }, 3000);
+
+/* ─── DOWNLOAD WITH PROGRESS ─── */
 const _oldDownloadAddon = downloadAddon;
-downloadAddon = async function(){
+downloadAddon = async function() {
   const ov = document.getElementById('exportOverlay');
   const bar = document.getElementById('exportBar');
   const txt = document.getElementById('exportText');
-  try{
-    ov.style.display='flex';
-    bar.style.width='15%';
-    txt.textContent='Preparing files...';
+  try {
+    ov.style.display='flex'; bar.style.width='15%'; txt.textContent='Preparing files...';
     await new Promise(r=>setTimeout(r,100));
-
-    bar.style.width='60%';
-    txt.textContent='Building addon...';
+    bar.style.width='60%'; txt.textContent='Building addon...';
     await _oldDownloadAddon();
-
-    bar.style.width='100%';
-    txt.textContent='Export complete!';
-    setTimeout(()=>{ ov.style.display='none'; },800);
-  }catch(e){
+    bar.style.width='100%'; txt.textContent='Export complete!';
+    setTimeout(()=>{ ov.style.display='none'; }, 800);
+  } catch(e) {
     txt.textContent='Export failed';
-    setTimeout(()=>{ ov.style.display='none'; },1200);
+    setTimeout(()=>{ ov.style.display='none'; }, 1200);
     throw e;
   }
 };
 
-function createProject(){
-
-  const name = prompt('Project name:');
-  if(!name) return;
-  const projects = JSON.parse(localStorage.getItem('mcab_projects')||'[]');
-  projects.push({name:name,date:Date.now()});
-  localStorage.setItem('mcab_projects',JSON.stringify(projects));
-  alert('Project created: '+name);
+/* ─── PROJECT HUB ─── */
+function renderProjectList() {
+  const wrap = document.getElementById('projectList');
+  if (!wrap) return;
+  const list = JSON.parse(localStorage.getItem('mcab_recent_v2')||'[]');
+  if (!list.length) {
+    wrap.innerHTML = '<div style="color:#666;font-size:12px;text-align:center;padding:16px 0">ยังไม่มีโปรเจกต์ล่าสุด</div>';
+    return;
+  }
+  wrap.innerHTML = list.map((p,i) => {
+    const d = new Date(p.date);
+    const ds = d.toLocaleDateString('th-TH')+' '+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
+    return `<div class="projectCard" onclick="reOpenProject(${i})">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:22px">📁</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;color:#eee;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${h(p.name)}</div>
+          <div style="font-size:11px;color:#666;margin-top:2px">${ds}</div>
+        </div>
+        <span style="font-size:11px;color:#4ade80">เปิด →</span>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-loadProject();
-
-function renderProjectList(){
-  const wrap=document.getElementById('projectList');
-  if(!wrap) return;
-  const projects=JSON.parse(localStorage.getItem('mcab_projects')||'[]');
-  wrap.innerHTML=projects.map((p,i)=>`<div class="projectCard" onclick="openProject(${i})"><b>${p.name}</b></div>`).join('');
+async function reOpenProject(idx) {
+  const list = JSON.parse(localStorage.getItem('mcab_recent_v2')||'[]');
+  const meta = list[idx];
+  if (!meta) return;
+  if (!FS_SUPPORTED) {
+    _lsLoad(); closeHub(); return;
+  }
+  try {
+    const dir = await window.showDirectoryPicker({mode:'readwrite', id:'mcab-project'});
+    const ok = await loadProjectFromDir(dir);
+    if (ok) {
+      closeHub();
+    } else {
+      alert('ไม่พบไฟล์ project.json ในโฟลเดอร์นี้');
+    }
+  } catch(e) {
+    if (e.name !== 'AbortError') alert('เกิดข้อผิดพลาด: '+e.message);
+  }
 }
-function createProjectEnhanced(){
-  const name=prompt('Project name');
-  if(!name) return;
-  const projects=JSON.parse(localStorage.getItem('mcab_projects')||'[]');
-  projects.push({name});
-  localStorage.setItem('mcab_projects',JSON.stringify(projects));
+
+async function createProjectNew() {
+  const name = prompt('ชื่อโปรเจกต์ใหม่:');
+  if (!name || !name.trim()) return;
+  const ns = name.trim().toLowerCase().replace(/[^a-z0-9]/g,'_');
+
+  if (FS_SUPPORTED) {
+    try {
+      // Ask browser for folder permission
+      const dir = await window.showDirectoryPicker({mode:'readwrite', id:'mcab-project',
+        startIn:'documents'});
+      projectDirHandle = dir;
+      // Initialize fresh state
+      S = makeState();
+      S.proj.bpName = name.trim() + ' BP';
+      S.proj.rpName = name.trim() + ' RP';
+      S.proj.ns = ns;
+      S.proj.desc = 'Custom Addon by ' + name.trim();
+      genAllUUIDs();
+      await saveProjectToDir();
+      closeHub();
+    } catch(e) {
+      if (e.name !== 'AbortError') alert('เกิดข้อผิดพลาด: '+e.message);
+    }
+  } else {
+    // Fallback: localStorage only
+    S = makeState();
+    S.proj.bpName = name.trim() + ' BP';
+    S.proj.rpName = name.trim() + ' RP';
+    S.proj.ns = ns;
+    genAllUUIDs();
+    _lsSave();
+    closeHub();
+  }
+}
+
+async function openProjectFromFolder() {
+  if (!FS_SUPPORTED) {
+    _lsLoad(); closeHub(); return;
+  }
+  try {
+    const dir = await window.showDirectoryPicker({mode:'readwrite', id:'mcab-project'});
+    const ok = await loadProjectFromDir(dir);
+    if (ok) {
+      closeHub();
+    } else {
+      // Folder has no project.json — offer to initialize a new project here
+      const name = prompt('ไม่พบโปรเจกต์ในโฟลเดอร์นี้\nใส่ชื่อโปรเจกต์เพื่อสร้างใหม่ที่นี่:');
+      if (!name) return;
+      projectDirHandle = dir;
+      S = makeState();
+      S.proj.bpName = name.trim() + ' BP';
+      S.proj.rpName = name.trim() + ' RP';
+      S.proj.ns = name.trim().toLowerCase().replace(/[^a-z0-9]/g,'_');
+      genAllUUIDs();
+      await saveProjectToDir();
+      closeHub();
+    }
+  } catch(e) {
+    if (e.name !== 'AbortError') alert('เกิดข้อผิดพลาด: '+e.message);
+  }
+}
+
+function closeHub() {
+  document.getElementById('projectHub').style.display = 'none';
+  renderAll();
+  applyPanel();
+  $('#hdr-ns').textContent = S.proj.ns || 'myaddon';
+}
+
+function showHub() {
+  document.getElementById('projectHub').style.display = 'flex';
   renderProjectList();
-  document.getElementById('projectHub').style.display='none';
 }
-function openProject(){
-  document.getElementById('projectHub').style.display='none';
-}
-renderProjectList();
 
+/* ─── INITIAL LOAD ─── */
+_lsLoad();
 
 /* ────────── INIT ────────── */
-genAllUUIDs();
+// Only generate UUIDs if they are empty (new state)
+if (!Object.values(S.proj.uuids).some(v=>v)) {
+  genAllUUIDs();
+} else {
+  renderActivityBar(); renderPanel(); renderStatus();
+}
 S.panelOpen = true;
 renderAll();
 applyPanel();
+$('#hdr-ns').textContent = S.proj.ns || 'myaddon';
 </script>
 
 <div id="exportOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;align-items:center;justify-content:center">
@@ -1222,14 +1395,57 @@ applyPanel();
 </div>
 
 
-<div id="projectHub">
-  <div class="hub">
-    <h2>📁 Project Manager</h2>
-    <p>Create or open a project.</p>
-    <button class="btn btn-g" onclick="createProjectEnhanced()">➕ New Project</button>
-    <div id="projectList"></div>
+<div id="projectHub" style="position:fixed;inset:0;background:#161618;z-index:10000;display:flex;align-items:center;justify-content:center">
+  <div style="background:#1e1e1e;border:1px solid #333;border-radius:14px;width:min(94vw,540px);padding:32px;color:white">
+
+    <!-- Logo -->
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="font-family:'Courier New',monospace;font-size:13px;font-weight:700;color:#4ade80;letter-spacing:.15em;text-shadow:0 0 18px rgba(74,222,128,.4)">⬛ MC ADDON BUILDER</div>
+      <div style="font-size:22px;font-weight:700;margin-top:10px">Project Manager</div>
+      <div style="font-size:12px;color:#666;margin-top:4px">เลือกโปรเจกต์หรือสร้างใหม่</div>
+    </div>
+
+    <!-- FS API notice -->
+    <div id="fsNotice" style="display:none;background:rgba(245,158,11,.09);border:1px solid rgba(245,158,11,.25);border-radius:7px;padding:9px 13px;font-size:11px;color:#f59e0b;margin-bottom:14px">
+      ⚠️ เบราว์เซอร์นี้ไม่รองรับ File System API — จะใช้ localStorage แทน (ข้อมูลอาจหายเมื่อล้าง cache)
+    </div>
+
+    <!-- Action buttons -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+      <button onclick="createProjectNew()" style="background:#4ade80;color:#000;border:none;border-radius:8px;padding:13px;font-size:13px;font-weight:700;cursor:pointer;transition:.15s;font-family:inherit" onmouseover="this.style.background='#6ee79b'" onmouseout="this.style.background='#4ade80'">
+        ➕ New Project
+        <div style="font-size:10px;font-weight:400;margin-top:3px;opacity:.7">เลือกโฟลเดอร์เก็บข้อมูล</div>
+      </button>
+      <button onclick="openProjectFromFolder()" style="background:#252526;color:#d4d4d4;border:1px solid #444;border-radius:8px;padding:13px;font-size:13px;font-weight:700;cursor:pointer;transition:.15s;font-family:inherit" onmouseover="this.style.background='#2d2d2d'" onmouseout="this.style.background='#252526'">
+        📂 Open Folder
+        <div style="font-size:10px;font-weight:400;margin-top:3px;opacity:.6">เปิดโปรเจกต์จากโฟลเดอร์</div>
+      </button>
+    </div>
+
+    <!-- Recent projects -->
+    <div style="margin-bottom:4px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#555;font-family:'Courier New',monospace;margin-bottom:8px">RECENT PROJECTS</div>
+      <div id="projectList" style="max-height:240px;overflow-y:auto"></div>
+    </div>
+
+    <!-- Continue without saving -->
+    <div style="text-align:center;margin-top:16px">
+      <button onclick="closeHub()" style="background:none;border:none;color:#555;font-size:11px;cursor:pointer;font-family:inherit;padding:4px 8px;border-radius:4px;transition:.1s" onmouseover="this.style.color='#888'" onmouseout="this.style.color='#555'">
+        ข้ามไปก่อน (ไม่บันทึกโฟลเดอร์)
+      </button>
+    </div>
+
   </div>
 </div>
+
+<script>
+// Show FS API warning if not supported
+if (!('showDirectoryPicker' in window)) {
+  const n = document.getElementById('fsNotice');
+  if (n) n.style.display = 'block';
+}
+renderProjectList();
+</script>
 
 </body>
 </html>
