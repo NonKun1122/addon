@@ -288,6 +288,79 @@ body{background:var(--ed);color:var(--text);
 .projectCard{padding:10px;border:1px solid #444;border-radius:8px;margin:8px 0;cursor:pointer}
 .projectCard:hover{background:#333}
 
+/* TEMPLATE MODAL */
+#tplModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:5000;
+  align-items:center;justify-content:center;backdrop-filter:blur(3px)}
+#tplModal.show{display:flex}
+.tpl-box{background:#252526;border:1px solid var(--bord2);border-radius:10px;  width:min(94vw,680px);max-height:85vh;display:flex;flex-direction:column;overflow:hidden}
+.tpl-hdr{display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;border-bottom:1px solid var(--border);flex-shrink:0}
+.tpl-hdr h3{font-size:14px;color:#fff}
+.tpl-close{background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;
+  line-height:1;padding:2px 6px;border-radius:4px;transition:.1s}
+.tpl-close:hover{color:#fff;background:var(--hov)}
+.tpl-tabs{display:flex;border-bottom:1px solid var(--border);padding:0 14px;flex-shrink:0}
+.tpl-tab{padding:8px 14px;font-size:12px;color:var(--text3);cursor:pointer;
+  border-bottom:2px solid transparent;transition:.1s}
+.tpl-tab:hover{color:var(--text)}.tpl-tab.sel{color:var(--acc);border-color:var(--acc)}
+.tpl-body{flex:1;overflow-y:auto;padding:16px}
+.tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.tpl-card{background:#1e1e1e;border:1px solid var(--border);border-radius:8px;
+  padding:14px;cursor:pointer;transition:.15s;text-align:center}
+.tpl-card:hover{border-color:var(--acc);background:#222;transform:translateY(-2px)}
+.tpl-card-ico{font-size:36px;margin-bottom:8px}
+.tpl-card-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px}
+.tpl-card-desc{font-size:10px;color:var(--text3);line-height:1.4}
+.tpl-card-slot{font-size:9px;color:var(--acc2);margin-top:5px;
+  font-family:'Courier New',monospace}
+
+/* ICON UPLOAD */
+.icon-uz{border:1.5px dashed var(--bord2);border-radius:8px;padding:18px;
+  text-align:center;cursor:pointer;transition:.15s;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;gap:6px}
+.icon-uz:hover{border-color:var(--acc);background:rgba(74,222,128,.03)}
+.icon-uz.filled{border-style:solid;border-color:var(--acc)}
+.icon-uz input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.icon-uz img{width:64px;height:64px;image-rendering:pixelated;border-radius:4px}
+
+/* ASSETS TAB */
+.asset-row{display:flex;align-items:center;gap:10px;background:#252526;
+  border:1px solid var(--border);border-radius:7px;padding:10px 12px;margin-bottom:8px}
+.asset-ico{font-size:20px;flex-shrink:0}
+.asset-info{flex:1;min-width:0}
+.asset-name{font-size:12px;color:var(--text);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.asset-meta{font-size:10px;color:var(--text3);margin-top:2px}
+.asset-actions{display:flex;gap:6px;flex-shrink:0}
+
+/* EDITABLE CODE */
+.code-edited{border-color:var(--acc2)!important}
+.edit-badge{font-size:9px;padding:2px 6px;border-radius:3px;
+  background:rgba(34,211,238,.15);color:var(--acc2);margin-left:6px}
+
+/* FULL CODE EDITOR */
+#econtent.editor-mode{padding:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}
+.ed-toolbar{height:36px;background:#252526;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0;min-width:0}
+.ed-path{font-family:'Courier New',monospace;font-size:10px;color:var(--text2);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.ed-lang{font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 7px;
+  border-radius:3px;flex-shrink:0}
+.ed-lang.js{background:rgba(245,158,11,.15);color:#f59e0b}
+.ed-lang.json{background:rgba(34,211,238,.12);color:var(--acc2)}
+.ed-lang.txt{background:rgba(255,255,255,.06);color:var(--text3)}
+.ed-lang.img{background:rgba(74,222,128,.1);color:var(--acc)}
+.ed-body{flex:1;overflow:hidden;display:flex;min-height:0}
+.code-editor-ta{width:100%;height:100%;background:#1b1b1b;border:none;outline:none;
+  font-family:'Consolas','Courier New',monospace;font-size:12.5px;line-height:1.8;
+  color:#d4d4d4;padding:16px 20px;resize:none;tab-size:2;-moz-tab-size:2;
+  caret-color:var(--acc)}
+.code-editor-ta::selection{background:rgba(74,222,128,.22)}
+.ed-img-view{flex:1;display:flex;align-items:center;justify-content:center;
+  background:#1b1b1b;flex-direction:column;gap:10px}
+.ed-welcome{flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:6px;background:#1b1b1b;color:var(--text3)}
+.file-dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0}
+.file-dot.custom{background:var(--acc2)}.file-dot.ok{background:var(--acc)}
 </style>
 </head>
 <body>
@@ -347,12 +420,16 @@ let S = makeState();
 function makeState() {
   return {
     proj: { bpName:'MyAddon BP', rpName:'MyAddon RP', ns:'myaddon', desc:'Custom Addon',
-            uuids:{bpH:'',bpD:'',bpS:'',rpH:'',rpM:''} },
+            uuids:{bpH:'',bpD:'',bpS:'',rpH:'',rpM:''},
+            bpIcon: null, rpIcon: null },
     items: [], tex: {},
+    models: {},      // { itemId: geoJsonText }
+    anims: {},       // { itemId: animJsonText }
+    customFiles: {}, // { 'path/file.json': overrideText }
     opts: { autoGive:true, playerFilter:'' },
     scriptCustom: null,
     act: 'setup', panelOpen: true,
-    selItem: null, selTexItem: null, pvFile: null,
+    selItem: null, selTexItem: null, selAssetItem: null, pvFile: null,
   };
 }
 
@@ -361,13 +438,13 @@ const ACTS = [
   {id:'setup',    em:'⚙️', tip:'ตั้งค่าโปรเจกต์'},
   {id:'items',    em:'📦', tip:'จัดการไอเทม'},
   {id:'textures', em:'🎨', tip:'อัปโหลดเทกเจอร์'},
-  {id:'script',   em:'⚡', tip:'แก้ไข Script'},
-  {id:'preview',  em:'📁', tip:'ดูไฟล์ทั้งหมด'},
+  {id:'assets',   em:'🗂️', tip:'โมเดล & อนิเมชั่น'},
+  {id:'editor',   em:'💻', tip:'Code Editor'},
   {id:'export',   em:'📥', tip:'Download .mcaddon'},
 ];
 const PANEL_TITLES = {
   setup:'SETUP', items:'ITEMS', textures:'TEXTURES',
-  script:'SCRIPT', preview:'EXPLORER', export:'EXPORT'
+  assets:'ASSETS', editor:'EXPLORER', export:'EXPORT'
 };
 
 /* ────────── NAVIGATION ────────── */
@@ -423,12 +500,14 @@ function renderAll() {
 function renderActivityBar() {
   const u = S.proj.uuids;
   const uOk = Object.values(u).every(v=>v);
+  const hasModels = S.items.some(i => S.models[i.id]);
+  const hasCustom = Object.keys(S.customFiles||{}).length > 0;
   const dots = {
     setup:    uOk ? 'ok' : 'warn',
     items:    S.items.length ? 'ok' : '',
     textures: '',
-    script:   S.items.length ? 'ok' : '',
-    preview:  '',
+    assets:   hasModels ? 'ok' : '',
+    editor:   hasCustom ? 'ok' : '',
     export:   uOk && S.items.length ? 'ok' : 'warn',
   };
   $('#ab-icons').innerHTML = ACTS.map(a => {
@@ -508,26 +587,30 @@ function renderPanel() {
     return;
   }
 
-  if (S.act === 'script') {
-    b.innerHTML = [
-      '<div class="ps"><div class="ps-title">OPTIONS</div>',
-      '<div style="padding:8px 12px;display:flex;flex-direction:column;gap:10px">',
-      '<div class="fld"><label>Auto-give on Spawn</label>',
-      '<select id="sc-ag" onchange="S.opts.autoGive=this.value===\'1\';refreshScript()">',
-      '<option value="1"' + (S.opts.autoGive?' selected':'') + '>✅ เปิด</option>',
-      '<option value="0"' + (!S.opts.autoGive?' selected':'') + '>❌ ปิด</option>',
-      '</select></div>',
-      '<div class="fld"><label>กรองชื่อผู้เล่น</label>',
-      '<input id="sc-pl" value="' + h(S.opts.playerFilter) + '" placeholder="Steve, Alex ..." oninput="S.opts.playerFilter=this.value;refreshScript()">',
-      '<div class="hint">เว้นว่าง = ทุกคน</div></div>',
-      '<button class="btn btn-s" style="font-size:11px" onclick="resetScript()">↩ Reset Script</button>',
-      '</div></div>'
-    ].join('');
+  if (S.act === 'assets') {
+    let html = '<div class="ps"><div class="ps-title">ITEMS</div>';
+    if (S.items.length === 0) {
+      html += '<div class="pi" style="cursor:default;color:var(--text3);font-size:12px;padding:12px">เพิ่มไอเทมก่อน</div>';
+    }
+    S.items.forEach(it => {
+      const hasGeo  = !!S.models[it.id];
+      const hasAnim = !!S.anims[it.id];
+      let tagCls='', tagTxt='0/2';
+      if (hasGeo && hasAnim) { tagCls='ok'; tagTxt='2/2'; }
+      else if (hasGeo || hasAnim) { tagCls='warn'; tagTxt='1/2'; }
+      html += '<div class="pi' + (it.id===S.selAssetItem?' sel':'') + '" onclick="pickAssetItem(\'' + it.id + '\')">';
+      html += '<span class="pi-ico">🗂️</span>';
+      html += '<span class="pi-lbl">' + h(it.displayName) + '</span>';
+      html += '<span class="pi-tag ' + tagCls + '">' + tagTxt + '</span></div>';
+    });
+    html += '</div><div class="pdiv"></div>';
+    html += '<div style="padding:8px 12px"><button class="btn btn-s" style="width:100%;font-size:11px" onclick="openTplModal()">🧩 Template Picker</button></div>';
+    b.innerHTML = html;
     return;
   }
 
-  if (S.act === 'preview') {
-    renderTreePanel(b);
+  if (S.act === 'editor') {
+    renderEditorPanel(b);
     return;
   }
 
@@ -539,6 +622,8 @@ function renderPanel() {
       {ok:uOk,    lbl:'UUID ครบ 5 ตัว'},
       {ok:S.items.length>0, lbl:'มีไอเทม '+S.items.length+' ตัว'},
       {ok:Object.keys(S.tex).length>0, lbl:'มีเทกเจอร์ '+Object.keys(S.tex).length+' ไฟล์'},
+      {ok:S.items.some(i=>S.models[i.id]), lbl:'โมเดล geo.json'},
+      {ok:Object.keys(S.customFiles||{}).length>0, lbl:'มีการแก้โค้ด '+Object.keys(S.customFiles||{}).length+' ไฟล์'},
     ];
     let html = '<div class="ps"><div class="ps-title">CHECKLIST</div>';
     checks.forEach(c => {
@@ -557,22 +642,24 @@ const TAB_INFO = {
   setup:    {ico:'⚙️', lbl:'manifest.json'},
   items:    {ico:'📦', lbl:'items/'},
   textures: {ico:'🎨', lbl:'textures/'},
-  script:   {ico:'⚡', lbl:'scripts/main.js'},
-  preview:  {ico:'📁', lbl:'explorer'},
+  assets:   {ico:'🗂️', lbl:'assets/'},
+  editor:   {ico:'💻', lbl:'Code Editor'},
   export:   {ico:'📥', lbl:'export'},
 };
 function renderTabs() {
   const t = TAB_INFO[S.act];
   if (!t) { $('#etabs').innerHTML=''; return; }
-  const lbl = S.act==='preview' && S.pvFile ? S.pvFile.split('/').pop() : t.lbl;
+  const lbl = S.act==='editor' && S.pvFile ? S.pvFile.split('/').pop() : t.lbl;
   $('#etabs').innerHTML = '<div class="etab sel">' + t.ico + ' ' + h(lbl) + '</div>';
 }
 
 /* ────────── STATUS BAR ────────── */
 function renderStatus() {
   const lbls = {setup:'⚙️ ตั้งค่า',items:'📦 ไอเทม',textures:'🎨 เทกเจอร์',
-    script:'⚡ Script',preview:'📁 Explorer',export:'📥 Export'};
-  $('#sb-l').textContent = (lbls[S.act]||S.act) + ' — ' + (S.proj.ns||'myaddon');
+    assets:'🗂️ Assets',editor:'💻 Code Editor',export:'📥 Export'};
+  const ns = S.proj.ns||'myaddon';
+  const customCount = Object.keys(S.customFiles||{}).length;
+  $('#sb-l').textContent = (lbls[S.act]||S.act) + ' — ' + ns + (customCount ? '  ✏️ '+customCount+' custom' : '');
   const uOk = Object.values(S.proj.uuids).every(v=>v);
   $('#sb-r').textContent = S.items.length + ' items  ' + (uOk?'UUID ✓':'UUID ⚠');
 }
@@ -580,16 +667,23 @@ function renderStatus() {
 /* ────────── EDITOR ────────── */
 function renderEditor() {
   const el = $('#econtent');
+  // Toggle editor-mode class for full-height code editor
+  if (S.act === 'editor') {
+    el.classList.add('editor-mode');
+  } else {
+    el.classList.remove('editor-mode');
+  }
   if (S.act === 'setup')    renderSetupEd(el);
   else if (S.act === 'items')    renderItemsEd(el);
   else if (S.act === 'textures') renderTexEd(el);
-  else if (S.act === 'script')   renderScriptEd(el);
-  else if (S.act === 'preview')  renderPreviewEd(el);
+  else if (S.act === 'assets')   renderAssetsEd(el);
+  else if (S.act === 'editor')   renderCodeEditor(el);
   else if (S.act === 'export')   renderExportEd(el);
 }
 
 function renderSetupEd(el) {
   const p = S.proj;
+  const bpIconSrc = p.bpIcon, rpIconSrc = p.rpIcon;
   el.innerHTML = [
     '<div class="sec-h">⚙️ ตั้งค่าโปรเจกต์</div>',
     '<div class="sec-s">กำหนดชื่อ, namespace และ UUID ก่อนสร้างไอเทม</div>',
@@ -603,6 +697,37 @@ function renderSetupEd(el) {
     '<div class="fld"><label>Namespace ★</label><input id="in-ns" value="' + h(p.ns) + '" oninput="onSetupChange()"><div class="hint">ตัวพิมพ์เล็ก ไม่มีช่องว่าง เช่น myaddon</div></div>',
     '<div class="fld"><label>คำอธิบาย</label><input id="in-desc" value="' + h(p.desc) + '" oninput="onSetupChange()"></div>',
     '</div></div>',
+
+    // Pack Icons
+    '<div class="card">',
+    '<div class="card-h">🖼️ Pack Icon (pack_icon.png)</div>',
+    '<div class="al al-i" style="margin-bottom:12px">💡 ไอคอนแสดงในหน้า Resource Pack / Behavior Pack ของเกม — แนะนำ PNG <b>64×64</b> หรือ <b>128×128</b></div>',
+    '<div class="tex2">',
+    // BP Icon
+    '<div>',
+    '<div style="font-size:10px;color:var(--text3);margin-bottom:6px;font-weight:600;letter-spacing:.07em;text-transform:uppercase">Behavior Pack Icon</div>',
+    '<div class="icon-uz' + (bpIconSrc?' filled':'') + '">',
+    '<input type="file" accept="image/png,image/jpeg,image/gif" onchange="handlePackIcon(event,\'bp\')">',
+    bpIconSrc ? '<img src="' + bpIconSrc + '" alt="BP Icon">' : '<div style="font-size:38px">📦</div>',
+    '<div class="uz-l" style="font-size:11px">' + (bpIconSrc?'✅ อัปโหลดแล้ว':'คลิกเพื่ออัปโหลด') + '</div>',
+    '<div class="uz-h">PNG 64×64 แนะนำ</div>',
+    '</div>',
+    bpIconSrc ? '<button class="btn btn-r mt8" style="width:100%;font-size:11px" onclick="S.proj.bpIcon=null;renderSetupEd($(\'#econtent\'))">✕ ลบ</button>' : '',
+    '</div>',
+    // RP Icon
+    '<div>',
+    '<div style="font-size:10px;color:var(--text3);margin-bottom:6px;font-weight:600;letter-spacing:.07em;text-transform:uppercase">Resource Pack Icon</div>',
+    '<div class="icon-uz' + (rpIconSrc?' filled':'') + '">',
+    '<input type="file" accept="image/png,image/jpeg,image/gif" onchange="handlePackIcon(event,\'rp\')">',
+    rpIconSrc ? '<img src="' + rpIconSrc + '" alt="RP Icon">' : '<div style="font-size:38px">🎨</div>',
+    '<div class="uz-l" style="font-size:11px">' + (rpIconSrc?'✅ อัปโหลดแล้ว':'คลิกเพื่ออัปโหลด') + '</div>',
+    '<div class="uz-h">PNG 64×64 แนะนำ</div>',
+    '</div>',
+    rpIconSrc ? '<button class="btn btn-r mt8" style="width:100%;font-size:11px" onclick="S.proj.rpIcon=null;renderSetupEd($(\'#econtent\'))">✕ ลบ</button>' : '',
+    '</div>',
+    '</div></div>',
+
+    // UUIDs
     '<div class="card">',
     '<div class="card-h" style="justify-content:space-between">',
     '<span>🔑 UUID</span>',
@@ -626,31 +751,48 @@ function renderItemsEd(el) {
     ].join('');
     return;
   }
-  const ns = S.proj.ns || 'myaddon';
+  const ns  = S.proj.ns || 'myaddon';
   const slots = ['slot.armor.head','slot.armor.chest','slot.armor.legs','slot.armor.feet'];
-  const slotOpts = slots.map(s => '<option' + (item.slot===s?' selected':'') + '>' + s + '</option>').join('');
+  const slotOpts = slots.map(s => '<option'+(item.slot===s?' selected':'')+'>'+s+'</option>').join('');
+
+  const bpPath  = 'BehaviorPack_'+ns+'/items/'+item.id+'.json';
+  const trPath  = 'BehaviorPack_'+ns+'/items/'+item.id+'_trigger.json';
+  const attPath = 'ResourcePack_'+ns+'/attachables/'+item.id+'.json';
+  const scriptPath = 'BehaviorPack_'+ns+'/scripts/main.js';
+
+  function fileBtn(path, label) {
+    const isCustom = !!S.customFiles[path];
+    return '<button class="btn btn-s" style="font-size:11px;display:flex;align-items:center;gap:5px" onclick="openInEditor(\''+path+'\')">' +
+      (isCustom ? '<span style="color:var(--acc2)">✏️</span>' : '<span style="color:var(--text3)">⚡</span>') +
+      label + '</button>';
+  }
+
   el.innerHTML = [
     '<div class="sec-h">📦 ' + h(item.displayName) + '</div>',
     '<div class="sec-s" style="font-family:\'Courier New\',monospace;font-size:11px;color:var(--acc2)">' + ns + ':' + item.id + '</div>',
-    '<div class="card"><div class="card-h">✏️ แก้ไขไอเทม</div>',
+
+    '<div class="card"><div class="card-h">✏️ Properties</div>',
     '<div class="fg fg2">',
-    '<div class="fld"><label>Item ID (ไม่สามารถแก้ไข)</label><input value="' + h(item.id) + '" readonly style="color:var(--text3)"></div>',
-    '<div class="fld"><label>Display Name</label><input id="it-name" value="' + h(item.displayName) + '" oninput="updItem(\'' + item.id + '\',\'displayName\',this.value)"></div>',
+    '<div class="fld"><label>Item ID</label><input value="'+h(item.id)+'" readonly style="color:var(--text3)"></div>',
+    '<div class="fld"><label>Display Name</label><input value="'+h(item.displayName)+'" oninput="updItem(\''+item.id+'\',\'displayName\',this.value)"></div>',
     '</div>',
     '<div class="fg fg2">',
-    '<div class="fld"><label>Armor Slot</label><select onchange="updItem(\'' + item.id + '\',\'slot\',this.value)">' + slotOpts + '</select></div>',
-    '<div class="fld"><label>Icon Name</label><input id="it-icon" value="' + h(item.iconName) + '" oninput="updItem(\'' + item.id + '\',\'iconName\',this.value)"></div>',
+    '<div class="fld"><label>Armor Slot</label><select onchange="updItem(\''+item.id+'\',\'slot\',this.value)">'+slotOpts+'</select></div>',
+    '<div class="fld"><label>Icon Name</label><input value="'+h(item.iconName)+'" oninput="updItem(\''+item.id+'\',\'iconName\',this.value)"></div>',
     '</div></div>',
-    '<div class="card" style="padding:0;overflow:hidden">',
-    '<div class="mt" style="padding:0 12px;background:#2a2a2a">',
-    '<div class="mt-t sel" onclick="switchItab(this,\'ia-0\')">Armor JSON</div>',
-    '<div class="mt-t" onclick="switchItab(this,\'ia-1\')">Trigger JSON</div>',
-    '<div class="mt-t" onclick="switchItab(this,\'ia-2\')">Attachable</div>',
+
+    '<div class="card"><div class="card-h">💻 เปิดแก้ไขใน Code Editor</div>',
+    '<div class="al al-i" style="margin-bottom:12px;font-size:11px">⚡ = auto-generated &nbsp;·&nbsp; ✏️ = แก้ไขแล้ว — คลิกเพื่อเปิดในโปรแกรมแก้ไข</div>',
+    '<div style="display:flex;flex-direction:column;gap:7px">',
+    fileBtn(bpPath,  'items/' + item.id + '.json'),
+    fileBtn(trPath,  'items/' + item.id + '_trigger.json'),
+    fileBtn(attPath, 'attachables/' + item.id + '.json'),
+    fileBtn(scriptPath, 'scripts/main.js'),
+    '</div></div>',
+
+    '<div class="card"><div class="card-h">🗑️ ลบไอเทม</div>',
+    '<button class="btn btn-r" style="width:100%" onclick="delItem(\''+item.id+'\',null)">✕ ลบ ' + h(item.displayName) + '</button>',
     '</div>',
-    '<div id="ia-0"><div class="cx-body" style="padding:11px;max-height:260px;overflow:auto"><pre>' + h(genArmorJSON(item)) + '</pre></div></div>',
-    '<div id="ia-1" style="display:none"><div class="cx-body" style="padding:11px;max-height:260px;overflow:auto"><pre>' + h(genTriggerJSON(item)) + '</pre></div></div>',
-    '<div id="ia-2" style="display:none"><div class="cx-body" style="padding:11px;max-height:260px;overflow:auto"><pre>' + h(genAttachableJSON(item)) + '</pre></div></div>',
-    '</div>'
   ].join('');
 }
 
@@ -698,6 +840,71 @@ function renderTexEd(el) {
     modSrc ? '<button class="btn btn-r mt8" style="width:100%;font-size:11px" onclick="remTex(\'' + modKey + '\')">✕ ลบ</button>' : '',
     '</div></div>'
   ].join('');
+}
+
+/* ────────── ASSETS EDITOR ────────── */
+function renderAssetsEd(el) {
+  const id = S.selAssetItem || (S.items[0] && S.items[0].id);
+  const item = S.items.find(i => i.id === id);
+  if (!item) {
+    el.innerHTML = '<div class="sec-h">🗂️ Assets</div><div class="sec-s">เพิ่มไอเทมก่อน</div><div class="empty"><div class="empty-ico">🗂️</div><div>ยังไม่มีไอเทม</div></div>';
+    return;
+  }
+  const ns = S.proj.ns || 'myaddon';
+  const geoContent  = S.models[item.id] || '';
+  const animContent = S.anims[item.id]  || '';
+  const hasGeo  = !!geoContent;
+  const hasAnim = !!animContent;
+
+  el.innerHTML = [
+    '<div class="sec-h">🗂️ ' + h(item.displayName) + ' — Assets</div>',
+    '<div class="sec-s"><code style="color:var(--acc2)">' + ns + ':' + item.id + '</code></div>',
+    '<div style="display:flex;gap:8px;margin-bottom:14px">',
+    '<button class="btn btn-s" onclick="openTplModal(\'' + item.id + '\')" style="flex:1">🧩 Template Geometry</button>',
+    '<button class="btn btn-s" onclick="openTplAnimModal(\'' + item.id + '\')" style="flex:1">🎬 Template Animation</button>',
+    '</div>',
+    // Geometry
+    '<div class="card">',
+    '<div class="card-h" style="justify-content:space-between">',
+    '<span>📐 Geometry (.geo.json)</span>',
+    hasGeo ? '<button class="btn btn-r" style="font-size:10px;padding:3px 8px" onclick="delModel(\'' + item.id + '\')">✕ ลบ</button>' : '',
+    '</div>',
+    '<div class="hint" style="margin-bottom:10px">ResourcePack/models/entity/' + item.id + '.geo.json</div>',
+    !hasGeo ? '<div class="uz"><input type="file" accept=".json,application/json" onchange="handleModel(event,\'' + item.id + '\')"><div style="font-size:28px;margin-bottom:6px">📐</div><div class="uz-l">คลิกอัปโหลด .geo.json จาก Blockbench</div><div class="uz-h">หรือวาง JSON ด้านล่าง</div></div>' :
+    '<div class="al" style="background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);color:var(--acc);margin-bottom:10px">✅ ' + (tryGeoId(geoContent)||'geometry file loaded') + '</div>',
+    '<div class="cbox" style="margin-top:8px"><div class="cx-h"><span class="cx-lang">JSON — geometry</span>',
+    '<div style="display:flex;gap:5px">',
+    '<button class="bxs" onclick="copyText(\'geo_ta\')">📋</button>',
+    hasGeo ? '<button class="bxs" onclick="downloadAssetFile(\'geo\',\'' + item.id + '\')">⬇️</button>' : '',
+    '</div></div>',
+    '<div class="cx-body"><textarea id="geo_ta" spellcheck="false" placeholder="วาง geometry JSON ที่นี่..." oninput="saveModelText(\'' + item.id + '\',this.value)">' + h(geoContent) + '</textarea></div></div>',
+    '</div>',
+    // Animation
+    '<div class="card">',
+    '<div class="card-h" style="justify-content:space-between">',
+    '<span>🎬 Animation (.animation.json)</span>',
+    hasAnim ? '<button class="btn btn-r" style="font-size:10px;padding:3px 8px" onclick="delAnim(\'' + item.id + '\')">✕ ลบ</button>' : '',
+    '</div>',
+    '<div class="hint" style="margin-bottom:10px">ResourcePack/animations/' + item.id + '.animation.json</div>',
+    !hasAnim ? '<div class="uz"><input type="file" accept=".json,application/json" onchange="handleAnim(event,\'' + item.id + '\')"><div style="font-size:28px;margin-bottom:6px">🎬</div><div class="uz-l">คลิกอัปโหลด .animation.json จาก Blockbench</div><div class="uz-h">หรือวาง JSON ด้านล่าง</div></div>' :
+    '<div class="al" style="background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);color:var(--acc);margin-bottom:10px">✅ Animation loaded</div>',
+    '<div class="cbox" style="margin-top:8px"><div class="cx-h"><span class="cx-lang">JSON — animation</span>',
+    '<div style="display:flex;gap:5px">',
+    '<button class="bxs" onclick="copyText(\'anim_ta\')">📋</button>',
+    hasAnim ? '<button class="bxs" onclick="downloadAssetFile(\'anim\',\'' + item.id + '\')">⬇️</button>' : '',
+    '</div></div>',
+    '<div class="cx-body"><textarea id="anim_ta" spellcheck="false" placeholder="วาง animation JSON ที่นี่..." oninput="saveAnimText(\'' + item.id + '\',this.value)">' + h(animContent) + '</textarea></div></div>',
+    '</div>',
+  ].join('');
+}
+
+function tryGeoId(txt) {
+  try {
+    const d = JSON.parse(txt);
+    const geo = d['minecraft:geometry'];
+    if (geo && geo[0]) return geo[0].description?.identifier || 'geometry file loaded';
+  } catch(e){}
+  return 'geometry file loaded';
 }
 
 function renderScriptEd(el) {
@@ -848,7 +1055,15 @@ function delItem(id, e) {
   if (!confirm('ลบไอเทม "' + id + '"?')) return;
   S.items = S.items.filter(i => i.id !== id);
   delete S.tex['icon_'+id]; delete S.tex['model_'+id];
+  delete S.models[id]; delete S.anims[id];
+  // Remove custom file overrides for this item
+  const ns = S.proj.ns||'myaddon';
+  const bp = 'BehaviorPack_'+ns, rp = 'ResourcePack_'+ns;
+  delete S.customFiles[bp+'/items/'+id+'.json'];
+  delete S.customFiles[bp+'/items/'+id+'_trigger.json'];
+  delete S.customFiles[rp+'/attachables/'+id+'.json'];
   if (S.selItem === id) S.selItem = S.items.length ? S.items[0].id : null;
+  if (S.selAssetItem === id) S.selAssetItem = S.items.length ? S.items[0].id : null;
   S.scriptCustom = null;
   renderAll();
 }
@@ -872,67 +1087,255 @@ function handleTex(e, key) {
 }
 function remTex(key) { delete S.tex[key]; renderAll(); }
 
-/* ────────── SCRIPT HANDLERS ────────── */
-function refreshScript() {
-  S.scriptCustom = null;
-  if (S.act === 'script') renderEditor();
-}
-function resetScript() {
-  S.scriptCustom = null;
-  if (S.act === 'script') renderEditor();
-}
-function copyScript() {
-  const el = $('#sc-ed'); if (!el) return;
-  navigator.clipboard.writeText(el.value).then(() => {
-    const btn = $('#sc-copy-btn'); if (!btn) return;
-    btn.textContent='✅ Copied!';
-    setTimeout(()=>btn.textContent='📋 Copy', 1500);
-  });
+/* ────────── PACK ICON HANDLERS ────────── */
+function handlePackIcon(e, which) {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    if (which === 'bp') S.proj.bpIcon = ev.target.result;
+    else S.proj.rpIcon = ev.target.result;
+    renderSetupEd($('#econtent'));
+  };
+  r.readAsDataURL(f);
 }
 
-/* ────────── PREVIEW / TREE ────────── */
-function renderTreePanel(b) {
+/* ────────── ASSET HANDLERS ────────── */
+function pickAssetItem(id) {
+  S.selAssetItem = id;
+  if (S.act !== 'assets') { S.act='assets'; S.panelOpen=true; applyPanel(); }
+  renderAll();
+}
+function handleModel(e, itemId) {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => { S.models[itemId] = ev.target.result; renderAll(); };
+  r.readAsText(f);
+}
+function handleAnim(e, itemId) {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => { S.anims[itemId] = ev.target.result; renderAll(); };
+  r.readAsText(f);
+}
+function saveModelText(itemId, txt) {
+  if (txt.trim()) S.models[itemId] = txt;
+  else delete S.models[itemId];
+}
+function saveAnimText(itemId, txt) {
+  if (txt.trim()) S.anims[itemId] = txt;
+  else delete S.anims[itemId];
+}
+function delModel(itemId) { delete S.models[itemId]; renderAll(); }
+function delAnim(itemId)  { delete S.anims[itemId];  renderAll(); }
+
+function copyText(taId) {
+  const ta = document.getElementById(taId); if (!ta) return;
+  navigator.clipboard.writeText(ta.value).then(() => showSaveBadge('📋 Copied!'));
+}
+function downloadAssetFile(type, itemId) {
+  const content = type === 'geo' ? S.models[itemId] : S.anims[itemId];
+  if (!content) return;
+  const fname = type === 'geo' ? itemId + '.geo.json' : itemId + '.animation.json';
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], {type:'application/json'}));
+  a.download = fname;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(a.href);
+}
+
+/* ────────── CODE EDITOR ────────── */
+function getAllEditorFiles() {
+  const ns = S.proj.ns||'myaddon';
   const files = getFiles();
+  // Add texture files
   Object.keys(S.tex).forEach(k => {
-    const isI = k.startsWith('icon_');
-    const id  = k.replace(/^(icon|model)_/,'');
-    const ns  = S.proj.ns||'myaddon', rp='ResourcePack_'+ns;
+    const isI = k.startsWith('icon_'), id = k.replace(/^(icon|model)_/,'');
+    const rp = 'ResourcePack_'+ns;
     files[isI ? rp+'/textures/seaitem/'+id+'.png' : rp+'/textures/seana/'+id+'.png'] = S.tex[k];
   });
-  b._files = files;
-  b.innerHTML = buildTreeHTML(files, '');
+  return files;
 }
-function buildTreeHTML(files, q) {
+
+function renderEditorPanel(b) {
+  const files = getAllEditorFiles();
+  b._files = files;
+  b.innerHTML = buildEditorTree(files, b._treeQ || '');
+}
+
+function buildEditorTree(files, q) {
   const sorted = Object.keys(files).sort();
   const shown  = q ? sorted.filter(f => f.toLowerCase().includes(q.toLowerCase())) : sorted;
   const done   = new Set();
-  let html     = '<div style="padding:6px 10px 3px"><input placeholder="🔍 ค้นหา..." style="width:100%;background:#333;border:1px solid var(--border);border-radius:4px;padding:5px 8px;color:var(--text);font-size:11px;font-family:inherit" oninput="filterTree(this.value)" value="' + h(q) + '"></div>';
+  let html = '<div style="padding:6px 8px 2px"><input placeholder="🔍 ค้นหา..." style="width:100%;background:#2a2a2a;border:1px solid var(--border);border-radius:4px;padding:4px 8px;color:var(--text);font-size:11px;font-family:inherit;outline:none" oninput="filterEditorTree(this.value)" value="'+h(q)+'"></div>';
+
   shown.forEach(path => {
     const parts = path.split('/');
-    for (let i=1; i<parts.length; i++) {
-      const dir = parts.slice(0,i).join('/');
+    for (let i = 1; i < parts.length; i++) {
+      const dir = parts.slice(0, i).join('/');
       if (!done.has(dir)) {
-        html += '<div class="ti dir d' + Math.min(i-1,2) + '">📁 ' + h(parts[i-1]) + '/</div>';
+        html += '<div class="ti dir d'+Math.min(i-1,2)+'">📁 '+h(parts[i-1])+'</div>';
         done.add(dir);
       }
     }
     const depth = Math.min(parts.length-1, 2);
     const fname = parts[parts.length-1];
-    const ico = fname.endsWith('.png')?'🖼️':fname.endsWith('.json')?'📋':fname.endsWith('.js')?'⚡':'📄';
-    const sel = path===S.pvFile ? ' sel' : '';
-    html += '<div class="ti d' + depth + sel + '" onclick="showPvFile(\'' + path.replace(/'/g,"\\'") + '\')">' + ico + ' ' + h(fname) + '</div>';
+    const isCustom = !!S.customFiles[path];
+    const isScript = path.endsWith('.js');
+    const isImg = fname.endsWith('.png') || (files[path]||'').startsWith?.('data:image');
+    const ico = isImg ? '🖼️' : isScript ? '⚡' : fname.endsWith('.json') ? '📋' : '📄';
+    const sel = path === S.pvFile ? ' sel' : '';
+    const badge = isCustom ? ' <span style="font-size:9px;color:var(--acc2);margin-left:3px">●</span>' : '';
+    const pathEsc = path.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    html += '<div class="ti d'+depth+sel+'" onclick="openInEditor(\''+pathEsc+'\')">'+ico+' '+h(fname)+badge+'</div>';
   });
   return html;
 }
-function filterTree(q) {
-  const b = $('#pbody'); if (!b || !b._files) return;
-  b.innerHTML = buildTreeHTML(b._files, q);
-  b._files = b._files; // keep reference
+
+function filterEditorTree(q) {
+  const b = $('#pbody');
+  if (!b || !b._files) return;
+  b._treeQ = q;
+  b.innerHTML = buildEditorTree(b._files, q);
+  b._files = b._files;
 }
-function showPvFile(path) {
+
+function openInEditor(path) {
   S.pvFile = path;
-  renderTabs(); renderEditor();
-  renderTreePanel($('#pbody'));
+  S.act = 'editor';
+  S.panelOpen = true;
+  applyPanel();
+  renderAll();
+}
+
+function getEditorContent(path) {
+  // Check custom override first
+  if (S.customFiles[path] !== undefined) return S.customFiles[path];
+  const files = getAllEditorFiles();
+  return files[path] ?? null;
+}
+
+function renderCodeEditor(el) {
+  const path = S.pvFile;
+  const content = path ? getEditorContent(path) : null;
+  const fname = path ? path.split('/').pop() : '';
+  const isImg = fname.endsWith('.png') || (typeof content === 'string' && content.startsWith('data:image'));
+  const isEditable = path && !isImg && content !== null;
+  const isCustom = path && !!S.customFiles[path];
+  const langKey = fname.endsWith('.js') ? 'js' : fname.endsWith('.json') ? 'json' : fname.endsWith('.txt') ? 'txt' : isImg ? 'img' : 'txt';
+  const langLabel = {js:'JS',json:'JSON',txt:'TXT',img:'IMAGE'}[langKey] || 'TXT';
+
+  el.innerHTML = [
+    '<div class="ed-toolbar">',
+    path ? [
+      '<span class="ed-lang '+langKey+'">'+langLabel+'</span>',
+      '<span class="ed-path">'+h(path)+'</span>',
+      isCustom
+        ? '<span style="font-size:10px;color:var(--acc2);flex-shrink:0">✏️ แก้ไขแล้ว</span>'
+        : '<span style="font-size:10px;color:var(--text3);flex-shrink:0">⚡ auto-generated</span>',
+      '<div style="flex:1"></div>',
+      isCustom ? '<button class="bxs" onclick="resetEditorFile()" title="คืนค่า auto-generated">↩ Reset</button>' : '',
+      isEditable ? '<button class="bxs" onclick="formatEditorJSON()" title="Format JSON">{ }</button>' : '',
+      isEditable ? '<button class="bxs" onclick="copyEditorContent()">📋 Copy</button>' : '',
+    ].join('') :
+    '<span style="color:var(--text3);font-size:11px">← เลือกไฟล์จากแถบซ้าย</span>',
+    '</div>',
+    '<div class="ed-body">',
+    !path ? '<div class="ed-welcome"><div style="font-size:48px">💻</div><div style="font-size:13px">Code Editor</div><div style="font-size:11px">เปิดไฟล์จากแถบซ้าย — แก้ได้ทุกไฟล์</div></div>' :
+    isImg ? '<div class="ed-img-view"><img src="'+content+'" style="max-width:220px;image-rendering:pixelated;border:1px solid var(--border);border-radius:6px"><div style="font-size:11px;color:var(--text3)">'+h(fname)+'</div></div>' :
+    content === null ? '<div class="ed-welcome"><div style="font-size:32px">📄</div><div style="font-size:11px;color:var(--text3)">ไฟล์นี้เป็น placeholder — จะสร้างเมื่อ download</div></div>' :
+    '<textarea id="code-ta" class="code-editor-ta" spellcheck="false" oninput="onEditorInput(this,\''+path.replace(/'/g,"\\'")+'\')" onkeydown="handleEditorKey(event)">'+h(content)+'</textarea>',
+    '</div>',
+  ].join('');
+
+  // Auto-focus textarea
+  requestAnimationFrame(() => {
+    const ta = document.getElementById('code-ta');
+    if (ta) ta.focus();
+  });
+}
+
+function onEditorInput(ta, path) {
+  const content = ta.value;
+  // Get generated content to compare
+  const generated = getGeneratedContent(path);
+  if (generated !== null && content === generated) {
+    delete S.customFiles[path];
+  } else {
+    S.customFiles[path] = content;
+  }
+  // Update panel dot indicators
+  renderActivityBar();
+  renderEditorPanelIfOpen();
+}
+
+function getGeneratedContent(path) {
+  // Returns what the file would contain if not overridden
+  const ns = S.proj.ns||'myaddon';
+  const bp = 'BehaviorPack_'+ns, rp = 'ResourcePack_'+ns;
+  if (path === bp+'/manifest.json') return genBPManifest();
+  if (path === rp+'/manifest.json') return genRPManifest();
+  if (path === bp+'/scripts/main.js') return genScriptJS();
+  if (path === rp+'/textures/item_texture.json') return genItemTextureJSON();
+  for (const it of S.items) {
+    if (path === bp+'/items/'+it.id+'.json') return genArmorJSON(it);
+    if (path === bp+'/items/'+it.id+'_trigger.json') return genTriggerJSON(it);
+    if (path === rp+'/attachables/'+it.id+'.json') return genAttachableJSON(it);
+    if (path === rp+'/models/entity/'+it.id+'.geo.json') return S.models[it.id] || null;
+    if (path === rp+'/animations/'+it.id+'.animation.json') return S.anims[it.id] || null;
+  }
+  return null;
+}
+
+function resetEditorFile() {
+  if (!S.pvFile) return;
+  delete S.customFiles[S.pvFile];
+  renderAll();
+  showSaveBadge('↩ คืนค่า auto-generated แล้ว');
+}
+
+function formatEditorJSON() {
+  const ta = document.getElementById('code-ta');
+  if (!ta) return;
+  try {
+    const parsed = JSON.parse(ta.value);
+    const formatted = JSON.stringify(parsed, null, 2);
+    ta.value = formatted;
+    if (S.pvFile) onEditorInput(ta, S.pvFile);
+    showSaveBadge('✅ Format แล้ว');
+  } catch(e) {
+    showSaveBadge('❌ JSON ไม่ถูกต้อง: ' + e.message);
+  }
+}
+
+function copyEditorContent() {
+  const ta = document.getElementById('code-ta');
+  if (!ta) return;
+  navigator.clipboard.writeText(ta.value).then(() => showSaveBadge('📋 Copied!'));
+}
+
+function handleEditorKey(e) {
+  // Tab → insert 2 spaces
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const ta = e.target;
+    const start = ta.selectionStart, end = ta.selectionEnd;
+    ta.value = ta.value.substring(0, start) + '  ' + ta.value.substring(end);
+    ta.selectionStart = ta.selectionEnd = start + 2;
+    onEditorInput(ta, S.pvFile);
+  }
+}
+
+function renderEditorPanelIfOpen() {
+  if (S.act === 'editor') {
+    const b = $('#pbody');
+    if (b && b._files) renderEditorPanel(b);
+  }
+}
+
+// Script options helpers (moved to editor panel footer)
+function refreshScript() {
+  delete S.customFiles[(S.proj.ns||'myaddon') && 'BehaviorPack_'+(S.proj.ns||'myaddon')+'/scripts/main.js'];
+  if (S.act === 'editor') renderAll();
 }
 
 /* ────────── FILE GENERATORS ────────── */
@@ -1046,24 +1449,66 @@ function getFiles() {
   const ns = S.proj.ns||'myaddon';
   const bp = 'BehaviorPack_'+ns, rp = 'ResourcePack_'+ns;
   const f = {};
+
+  // Manifests
   f[bp+'/manifest.json'] = genBPManifest();
-  f[bp+'/scripts/main.js'] = S.scriptCustom !== null ? S.scriptCustom : genScriptJS();
-  S.items.forEach(it => {
-    f[bp+'/items/'+it.id+'.json'] = genArmorJSON(it);
-    f[bp+'/items/'+it.id+'_trigger.json'] = genTriggerJSON(it);
-  });
   f[rp+'/manifest.json'] = genRPManifest();
+
+  // Script — check customFiles first, then S.scriptCustom (legacy), then generate
+  const scriptPath = bp+'/scripts/main.js';
+  f[scriptPath] = S.customFiles[scriptPath] ?? (S.scriptCustom !== null ? S.scriptCustom : genScriptJS());
+
+  // Pack icons
+  if (S.proj.bpIcon) f[bp+'/pack_icon.png'] = S.proj.bpIcon;
+  if (S.proj.rpIcon) f[rp+'/pack_icon.png'] = S.proj.rpIcon;
+
+  // Items
+  S.items.forEach(it => {
+    const bpItemPath = bp+'/items/'+it.id+'.json';
+    const trItemPath = bp+'/items/'+it.id+'_trigger.json';
+    const attPath    = rp+'/attachables/'+it.id+'.json';
+    // Use custom override if exists, else generate
+    f[bpItemPath] = S.customFiles[bpItemPath] ?? genArmorJSON(it);
+    f[trItemPath] = S.customFiles[trItemPath] ?? genTriggerJSON(it);
+    f[attPath]    = S.customFiles[attPath]    ?? genAttachableJSON(it);
+
+    // Models (geo.json)
+    if (S.models[it.id]) {
+      f[rp+'/models/entity/'+it.id+'.geo.json'] = S.models[it.id];
+    } else {
+      f[rp+'/models/entity/'+it.id+'.geo.json'] = null; // placeholder
+    }
+
+    // Animations
+    if (S.anims[it.id]) {
+      f[rp+'/animations/'+it.id+'.animation.json'] = S.anims[it.id];
+    }
+
+    // Texture placeholders
+    if (!S.tex['icon_'+it.id])  f[rp+'/textures/seaitem/'+it.id+'.png'] = null;
+    if (!S.tex['model_'+it.id]) f[rp+'/textures/seana/'+it.id+'.png']   = null;
+  });
+
   if (S.items.length) {
     f[rp+'/textures/item_texture.json'] = genItemTextureJSON();
-    S.items.forEach(it => {
-      f[rp+'/attachables/'+it.id+'.json'] = genAttachableJSON(it);
-      if (!S.tex['icon_'+it.id])  f[rp+'/textures/seaitem/'+it.id+'.png'] = null;
-      if (!S.tex['model_'+it.id]) f[rp+'/textures/seana/'+it.id+'.png'] = null;
-    });
-    f[rp+'/models/entity/.keep'] = '# วางไฟล์ geometry.json จาก Blockbench ที่นี่';
-    f[rp+'/animations/.keep'] = '# วางไฟล์ animation.json จาก Blockbench ที่นี่';
   }
-  f['README.txt'] = 'MC ADDON — '+S.proj.bpName+'\nNamespace: '+ns+'\nItems: '+S.items.map(i=>ns+':'+i.id).join(', ')+'\n\nทำต่อ:\n1. Export Blockbench Geometry → '+rp+'/models/entity/\n2. Export Blockbench Animation → '+rp+'/animations/\n3. แก้ '+rp+'/attachables/ ให้ชี้ geometry+animation\n4. วาง PNG texture ใน textures/seaitem/ และ textures/seana/';
+
+  // Any extra custom files not covered above
+  Object.entries(S.customFiles || {}).forEach(([path, content]) => {
+    if (!(path in f)) f[path] = content;
+  });
+
+  f['README.txt'] = [
+    'MC ADDON — '+S.proj.bpName,
+    'Namespace: '+ns,
+    'Items: '+S.items.map(i=>ns+':'+i.id).join(', '),
+    '',
+    'ไฟล์ที่รวมมาด้วย:',
+    S.proj.bpIcon  ? '✅ BP pack_icon.png' : '⚠️ ยังไม่มี BP icon',
+    S.proj.rpIcon  ? '✅ RP pack_icon.png' : '⚠️ ยังไม่มี RP icon',
+    S.items.some(i=>S.models[i.id])  ? '✅ Geometry (.geo.json)' : '⚠️ ยังไม่มี geometry',
+    S.items.some(i=>S.anims[i.id])   ? '✅ Animation (.animation.json)' : '⚠️ ยังไม่มี animation',
+  ].join('\n');
   return f;
 }
 
@@ -1075,30 +1520,41 @@ async function downloadAddon() {
   if (!S.items.length) { alert('เพิ่มไอเทมอย่างน้อย 1 ตัวก่อน'); return; }
   if (typeof JSZip === 'undefined') { alert('JSZip ยังโหลดไม่เสร็จ ลองใหม่'); return; }
   const btns = $$('.dl-btn, .tb-pri, #hdr-dl');
-  btns.forEach(b => { b.disabled=true; });
+  btns.forEach(b => b.disabled=true);
   try {
     const zip  = new JSZip();
+    const ns   = S.proj.ns||'myaddon';
+    const bp   = 'BehaviorPack_'+ns, rp = 'ResourcePack_'+ns;
     const files = getFiles();
-    for (const [p,c] of Object.entries(files)) {
+
+    // Add all generated/custom text files
+    for (const [p, c] of Object.entries(files)) {
       if (!c) continue;
-      c.startsWith('data:image') ? zip.file(p, c.split(',')[1], {base64:true}) : zip.file(p, c);
+      if (typeof c === 'string' && c.startsWith('data:image')) {
+        zip.file(p, c.split(',')[1], {base64:true});
+      } else if (typeof c === 'string') {
+        zip.file(p, c);
+      }
     }
-    const ns = S.proj.ns||'myaddon', rp = 'ResourcePack_'+ns;
-    for (const [k,durl] of Object.entries(S.tex)) {
+
+    // Textures (icon + model per item)
+    for (const [k, durl] of Object.entries(S.tex)) {
+      if (!durl) continue;
       const isI = k.startsWith('icon_'), id = k.replace(/^(icon|model)_/,'');
       zip.file(isI ? rp+'/textures/seaitem/'+id+'.png' : rp+'/textures/seana/'+id+'.png',
         durl.split(',')[1], {base64:true});
     }
+
     const blob = await zip.generateAsync({type:'blob', compression:'DEFLATE'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = ns+'_addon.mcaddon';
     document.body.appendChild(a); a.click();
     document.body.removeChild(a); URL.revokeObjectURL(a.href);
-    btns.forEach(b => { b.disabled=false; });
+    btns.forEach(b => b.disabled=false);
   } catch(e) {
     alert('Error: ' + e.message);
-    btns.forEach(b => { b.disabled=false; });
+    btns.forEach(b => b.disabled=false);
   }
 }
 
@@ -1131,31 +1587,207 @@ document.addEventListener('mouseup', () => {
 });
 
 
-/* ─── FILE SYSTEM ACCESS API ─── */
+/* ────────── TEMPLATES ────────── */
+function makeGeo(ns, id, slot) {
+  const geoId = 'geometry.'+ns+'_'+id;
+  const bonesBySlot = {
+    'slot.armor.head': [
+      {name:'root',pivot:[0,0,0]},
+      {name:'head',parent:'root',pivot:[0,24,0],
+        cubes:[{origin:[-4,24,-4],size:[8,8,8],uv:[0,0]}]}
+    ],
+    'slot.armor.chest': [
+      {name:'root',pivot:[0,0,0]},
+      {name:'body',parent:'root',pivot:[0,24,0],cubes:[{origin:[-4,12,-2],size:[8,12,4],uv:[16,16]}]},
+      {name:'rightArm',parent:'root',pivot:[-5,22,0],cubes:[{origin:[-8,12,-2],size:[4,12,4],uv:[40,16]}]},
+      {name:'leftArm', parent:'root',pivot:[5,22,0], cubes:[{origin:[4,12,-2], size:[4,12,4],uv:[40,16]}]}
+    ],
+    'slot.armor.legs': [
+      {name:'root',pivot:[0,0,0]},
+      {name:'hips',parent:'root',pivot:[0,12,0],cubes:[{origin:[-4,8,-2],size:[8,4,4],uv:[0,16]}]},
+      {name:'rightLeg',parent:'root',pivot:[-2,12,0],cubes:[{origin:[-4,0,-2],size:[4,12,4],uv:[0,16]}]},
+      {name:'leftLeg', parent:'root',pivot:[2,12,0], cubes:[{origin:[0,0,-2], size:[4,12,4],uv:[0,16]}]}
+    ],
+    'slot.armor.feet': [
+      {name:'root',pivot:[0,0,0]},
+      {name:'rightBoot',parent:'root',pivot:[-2,12,0],cubes:[{origin:[-4,0,-2],size:[4,6,4],uv:[0,16]}]},
+      {name:'leftBoot', parent:'root',pivot:[2,12,0], cubes:[{origin:[0,0,-2], size:[4,6,4],uv:[0,16]}]}
+    ]
+  };
+  const bones = bonesBySlot[slot] || bonesBySlot['slot.armor.head'];
+  return JSON.stringify({
+    format_version:'1.12.0',
+    'minecraft:geometry':[{
+      description:{identifier:geoId,texture_width:64,texture_height:32,
+        visible_bounds_width:3,visible_bounds_height:3,visible_bounds_offset:[0,1,0]},
+      bones
+    }]
+  }, null, 2);
+}
+
+function makeAnim(ns, id, animType) {
+  const animId = 'animation.'+ns+'_'+id+'.main';
+  const boneAnims = {
+    head_track: {head:{rotation:['query.head_x_rotation','query.head_y_rotation',0]}},
+    sway:  {body:{rotation:[0,'math.sin(query.life_time*57.3*2)*5',0]}},
+    spin:  {head:{rotation:[0,'query.life_time*360*0.5',0]}},
+    idle:  {}
+  };
+  return JSON.stringify({
+    format_version:'1.8.0',
+    animations:{
+      [animId]:{loop:true,bones:boneAnims[animType]||{}}
+    }
+  }, null, 2);
+}
+
+const GEO_TEMPLATES = [
+  {key:'head',  ico:'🪖', name:'Helmet',      desc:'Head slot armor\nBone: head',          slot:'slot.armor.head'},
+  {key:'chest', ico:'🦺', name:'Chestplate',  desc:'Chest slot armor\nBones: body, arms',  slot:'slot.armor.chest'},
+  {key:'legs',  ico:'👖', name:'Leggings',    desc:'Legs slot armor\nBones: hips, legs',   slot:'slot.armor.legs'},
+  {key:'feet',  ico:'👢', name:'Boots',       desc:'Feet slot armor\nBones: left/right boot',slot:'slot.armor.feet'},
+];
+const ANIM_TEMPLATES = [
+  {key:'head_track', ico:'👁️', name:'Head Tracking',   desc:'หัวหมุนตามมุมมองผู้เล่น'},
+  {key:'sway',       ico:'🌊', name:'Body Sway',        desc:'ตัวโยกซ้าย-ขวาตลอดเวลา'},
+  {key:'spin',       ico:'🌀', name:'Head Spin',        desc:'หัวหมุนรอบตลอดเวลา'},
+  {key:'idle',       ico:'⏸️', name:'Idle (ไม่มี anim)',desc:'ไม่มีการเคลื่อนไหว'},
+];
+
+let _tplTargetId = null, _tplTab = 'geo';
+
+function openTplModal(itemId) {
+  _tplTargetId = itemId || S.selAssetItem || (S.items[0]?.id);
+  _tplTab = 'geo';
+  _renderTplModal();
+  document.getElementById('tplModal').classList.add('show');
+}
+function openTplAnimModal(itemId) {
+  _tplTargetId = itemId || S.selAssetItem || (S.items[0]?.id);
+  _tplTab = 'anim';
+  _renderTplModal();
+  document.getElementById('tplModal').classList.add('show');
+}
+function closeTplModal() {
+  document.getElementById('tplModal').classList.remove('show');
+}
+
+function _renderTplModal() {
+  const modal = document.getElementById('tplModal');
+  const item  = S.items.find(i => i.id === _tplTargetId);
+  modal.innerHTML = [
+    '<div class="tpl-box">',
+    '<div class="tpl-hdr">',
+    '<h3>🧩 Template Picker' + (item?' — '+h(item.displayName):'') + '</h3>',
+    '<button class="tpl-close" onclick="closeTplModal()">✕</button>',
+    '</div>',
+    '<div class="tpl-tabs">',
+    '<div class="tpl-tab'+(_tplTab==='geo'?' sel':'')+ '" onclick="_tplTab=\'geo\';_renderTplModal()">📐 Geometry</div>',
+    '<div class="tpl-tab'+(_tplTab==='anim'?' sel':'')+ '" onclick="_tplTab=\'anim\';_renderTplModal()">🎬 Animation</div>',
+    '</div>',
+    '<div class="tpl-body">',
+    _tplTab === 'geo' ? _renderGeoTpls(item) : _renderAnimTpls(item),
+    '</div></div>'
+  ].join('');
+}
+
+function _renderGeoTpls(item) {
+  return '<div class="tpl-grid">' + GEO_TEMPLATES.map(t => [
+    '<div class="tpl-card" onclick="applyGeoTemplate(\''+t.key+'\',\''+t.slot+'\')">',
+    '<div class="tpl-card-ico">' + t.ico + '</div>',
+    '<div class="tpl-card-name">' + t.name + '</div>',
+    '<div class="tpl-card-desc">' + t.desc.replace(/\n/g,'<br>') + '</div>',
+    '<div class="tpl-card-slot">' + t.slot + '</div>',
+    (item && item.slot === t.slot ? '<div style="font-size:9px;color:var(--acc);margin-top:4px">✅ ตรงกับ slot ปัจจุบัน</div>' : ''),
+    '</div>'
+  ].join('')).join('') + '</div>' +
+  '<div class="al al-i" style="margin-top:14px">💡 Template จาก Blockbench เลือก slot ให้ตรงกับไอเทม แล้วส่งออก .geo.json มาแทนได้ทุกเมื่อ</div>';
+}
+
+function _renderAnimTpls(item) {
+  return '<div class="tpl-grid">' + ANIM_TEMPLATES.map(t => [
+    '<div class="tpl-card" onclick="applyAnimTemplate(\''+t.key+'\')">',
+    '<div class="tpl-card-ico">' + t.ico + '</div>',
+    '<div class="tpl-card-name">' + t.name + '</div>',
+    '<div class="tpl-card-desc">' + t.desc + '</div>',
+    '</div>'
+  ].join('')).join('') + '</div>';
+}
+
+function applyGeoTemplate(templateKey, slot) {
+  if (!_tplTargetId) { closeTplModal(); return; }
+  const ns   = S.proj.ns || 'myaddon';
+  const item = S.items.find(i => i.id === _tplTargetId);
+  if (!item) { closeTplModal(); return; }
+  S.models[_tplTargetId] = makeGeo(ns, _tplTargetId, slot);
+  // Also update item slot to match
+  item.slot = slot;
+  closeTplModal();
+  S.selAssetItem = _tplTargetId;
+  S.act = 'assets'; S.panelOpen = true; applyPanel();
+  renderAll();
+  showSaveBadge('✅ ใช้ Template: '+templateKey);
+}
+
+function applyAnimTemplate(templateKey) {
+  if (!_tplTargetId) { closeTplModal(); return; }
+  const ns = S.proj.ns || 'myaddon';
+  S.anims[_tplTargetId] = makeAnim(ns, _tplTargetId, templateKey);
+  closeTplModal();
+  S.selAssetItem = _tplTargetId;
+  S.act = 'assets'; S.panelOpen = true; applyPanel();
+  renderAll();
+  showSaveBadge('✅ ใช้ Template: '+templateKey);
+}
+
+
 let projectDirHandle = null;
 const FS_SUPPORTED = ('showDirectoryPicker' in window);
 
 async function saveProjectToDir() {
   if (!projectDirHandle) { _lsSave(); return; }
   try {
-    // Save state (without tex dataURLs — stored as separate PNG files)
-    const saveData = JSON.stringify({...S, tex:{}}, null, 2);
+    // Save state without binary data (stored separately)
+    const saveData = JSON.stringify({...S, tex:{}, proj:{...S.proj, bpIcon:null, rpIcon:null}}, null, 2);
     const fh = await projectDirHandle.getFileHandle('project.json', {create:true});
     const w = await fh.createWritable();
     await w.write(saveData); await w.close();
 
-    // Save each texture as a PNG file inside the project folder
-    for (const [key, dataUrl] of Object.entries(S.tex)) {
-      if (!dataUrl || !dataUrl.startsWith('data:')) continue;
+    // Helper: save dataURL as file
+    async function saveDataUrl(filename, dataUrl) {
+      if (!dataUrl || !dataUrl.startsWith('data:')) return;
       const base64 = dataUrl.split(',')[1];
       const binary = atob(base64);
       const bytes = new Uint8Array(binary.length);
       for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-      const blob = new Blob([bytes], {type:'image/png'});
-      const tfh = await projectDirHandle.getFileHandle('tex_'+key+'.png', {create:true});
+      const mimeMatch = dataUrl.match(/^data:([^;]+)/);
+      const mime = mimeMatch ? mimeMatch[1] : 'application/octet-stream';
+      const blob = new Blob([bytes], {type: mime});
+      const tfh = await projectDirHandle.getFileHandle(filename, {create:true});
       const tw = await tfh.createWritable();
       await tw.write(blob); await tw.close();
     }
+
+    // Save item textures
+    for (const [key, dataUrl] of Object.entries(S.tex)) {
+      await saveDataUrl('tex_'+key+'.png', dataUrl);
+    }
+    // Save pack icons
+    if (S.proj.bpIcon) await saveDataUrl('icon_bp.png', S.proj.bpIcon);
+    if (S.proj.rpIcon) await saveDataUrl('icon_rp.png', S.proj.rpIcon);
+
+    // Save models and animations as text files
+    for (const [id, text] of Object.entries(S.models)) {
+      const mfh = await projectDirHandle.getFileHandle('model_'+id+'.geo.json', {create:true});
+      const mw = await mfh.createWritable();
+      await mw.write(text); await mw.close();
+    }
+    for (const [id, text] of Object.entries(S.anims)) {
+      const afh = await projectDirHandle.getFileHandle('anim_'+id+'.animation.json', {create:true});
+      const aw = await afh.createWritable();
+      await aw.write(text); await aw.close();
+    }
+
     _saveRecentMeta();
     showSaveBadge('💾 บันทึกลงโฟลเดอร์แล้ว');
   } catch(e) {
@@ -1170,18 +1802,40 @@ async function loadProjectFromDir(dir) {
     const fh = await dir.getFileHandle('project.json');
     const file = await fh.getFile();
     S = Object.assign(makeState(), JSON.parse(await file.text()));
-    S.tex = {};
-    // Load textures — no re-upload needed!
+    S.tex = {}; S.models = {}; S.anims = {};
+    if (!S.proj.bpIcon) S.proj.bpIcon = null;
+    if (!S.proj.rpIcon) S.proj.rpIcon = null;
+
+    // Helper: read file as dataURL
+    async function readAsDataUrl(handle) {
+      const f = await handle.getFile();
+      return new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = e => res(e.target.result);
+        r.onerror = rej;
+        r.readAsDataURL(f);
+      });
+    }
+    // Helper: read file as text
+    async function readAsText(handle) {
+      const f = await handle.getFile();
+      return f.text();
+    }
+
     for await (const [name, handle] of dir.entries()) {
       if (name.startsWith('tex_') && name.endsWith('.png')) {
-        const f = await handle.getFile();
-        const dataUrl = await new Promise((res, rej) => {
-          const r = new FileReader();
-          r.onload = e => res(e.target.result);
-          r.onerror = rej;
-          r.readAsDataURL(f);
-        });
-        S.tex[name.replace(/^tex_/,'').replace(/\.png$/,'')] = dataUrl;
+        const key = name.replace(/^tex_/,'').replace(/\.png$/,'');
+        S.tex[key] = await readAsDataUrl(handle);
+      } else if (name === 'icon_bp.png') {
+        S.proj.bpIcon = await readAsDataUrl(handle);
+      } else if (name === 'icon_rp.png') {
+        S.proj.rpIcon = await readAsDataUrl(handle);
+      } else if (name.startsWith('model_') && name.endsWith('.geo.json')) {
+        const id = name.replace(/^model_/,'').replace(/\.geo\.json$/,'');
+        S.models[id] = await readAsText(handle);
+      } else if (name.startsWith('anim_') && name.endsWith('.animation.json')) {
+        const id = name.replace(/^anim_/,'').replace(/\.animation\.json$/,'');
+        S.anims[id] = await readAsText(handle);
       }
     }
     return true;
@@ -1394,6 +2048,10 @@ $('#hdr-ns').textContent = S.proj.ns || 'myaddon';
   </div>
 </div>
 
+
+<!-- Template Modal -->
+<div id="tplModal" class="tpl-bg">
+</div>
 
 <div id="projectHub" style="position:fixed;inset:0;background:#161618;z-index:10000;display:flex;align-items:center;justify-content:center">
   <div style="background:#1e1e1e;border:1px solid #333;border-radius:14px;width:min(94vw,540px);padding:32px;color:white">
